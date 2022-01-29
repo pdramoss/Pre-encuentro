@@ -14,10 +14,17 @@ public class Whale : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 move_direction;
+
     private SpriteRenderer sprite;
     private IEnumerator pressure_harm;
     private bool facing_right = true;
     private bool moving = false;
+
+    private int healthPoints;
+
+    public const int Initial_Health = 100, Max_Health = 200;
+
+    public const int Max_dist= 1000;
     
     void Start()
     {
@@ -29,8 +36,10 @@ public class Whale : MonoBehaviour
         pressure_harm = PressureHarm();
     }
 
-    void StartGame(){
+    public void StartGame(){
         this.transform.position = startPosition;
+
+        healthPoints = Initial_Health;
     }
 
     void Update()
@@ -114,5 +123,20 @@ public class Whale : MonoBehaviour
             yield return new WaitForSeconds(3);
             Harm(5);
         }
+    }
+
+    public void CollectHealth(int points){
+        this.healthPoints += points;
+        if(this.healthPoints >= Max_Health){
+            this.healthPoints = Max_Health;
+        }
+    }
+
+    public int GetHealth(){
+        return healthPoints;
+    }
+
+    public float GetDistance (){
+            return this.transform.position.x - startPosition.x;
     }
 }
