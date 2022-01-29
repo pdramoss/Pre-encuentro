@@ -12,11 +12,17 @@ public class Whale : MonoBehaviour
     private Rigidbody2D rb;
     private bool facing_right = true;
     private Vector2 move_direction;
+    public Vector3 startPosition;
     
     void Start()
     {
         Physics.IgnoreLayerCollision(4, 0);
         rb = GetComponent<Rigidbody2D>();
+        startPosition = this.transform.position;
+    }
+
+    void StartGame(){
+        this.transform.position = startPosition;
     }
 
     void Update()
@@ -38,5 +44,9 @@ public class Whale : MonoBehaviour
     {
         facing_right = !facing_right;
         transform.Rotate (0f, 180f, 0f);
+    }
+
+    public void Die(){
+        GameManager.sharedInstance.GameOver();
     }
 }
