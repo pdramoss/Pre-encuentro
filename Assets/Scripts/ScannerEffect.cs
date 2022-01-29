@@ -1,60 +1,74 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
 
 [ExecuteInEditMode]
-public class ScannerEffectDemo : MonoBehaviour
-{
-	public Transform ScannerOrigin;
-	public Material EffectMaterial;
-	public float ScanDistance;
+public class ScannerEffect : MonoBehaviour {
+	public Transform scannerOrigin;
+	public Material effectMaterial;
+	public float scanDistance;
+	public float maximumDistance;
 
 	private Camera _camera;
 
 	// Demo Code
-	bool _scanning;
-	Scannable[] _scannables;
+	private bool _scanning;
+	private Scannable[] _scannables;
 
-	void Start()
-	{
+	private PlayerController playerController;
+    // Start is called before the first frame update
+
+    private void Awake() {
+        playerController = new PlayerController();
+    }
+
+	void Start() {
 		_scannables = FindObjectsOfType<Scannable>();
     }
 
-	void Update()
-	{
-		if (_scanning)
-		{
-			ScanDistance += Time.deltaTime * 50;
-			foreach (Scannable s in _scannables)
-			{
-				if (Vector3.Distance(ScannerOrigin.position, s.transform.position) <= ScanDistance)
+	private void Update() {
+		if (_scanning) {
+			scanDistance += Time.deltaTime * 50;
+			foreach (Scannable s in _scannables) {
+				if (Vector3.Distance(scannerOrigin.position, s.transform.position) <= scanDistance)
 					s.Ping();
 			}
-		}
 
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			_scanning = true;
-			ScanDistance = 0;
+			if (scanDistance > maximumDistance) {
+				_scanning = false;
+				scanDistance = 0;
+			}
 		}
 	}
 	// End Demo Code
 
-	void OnEnable()
-	{
+	private void OnEnable() {
 		_camera = GetComponent<Camera>();
 		_camera.depthTextureMode = DepthTextureMode.Depth;
+		playerController.Enable();
+		playerController.Ocean.Sonar.performed += ActivateSonar;
 	}
+
+	private void OnDisable() {
+		playerController.Disable();
+		playerController.Ocean.Sonar.performed -= ActivateSonar;
+	}
+
+	private void ActivateSonar(InputAction.CallbackContext context) {
+		_scanning = true;
+		scanDistance = 0;
+        //Debug.Log("SONAR" + context.ReadValueAsButton());
+    }
 
 	[ImageEffectOpaque]
-	void OnRenderImage(RenderTexture src, RenderTexture dst)
-	{
-		EffectMaterial.SetVector("_WorldSpaceScannerPos", ScannerOrigin.position);
-		EffectMaterial.SetFloat("_ScanDistance", ScanDistance);
-		RaycastCornerBlit(src, dst, EffectMaterial);
+	private void OnRenderImage(RenderTexture src, RenderTexture dst) {
+		effectMaterial.SetVector("_WorldSpaceScannerPos", scannerOrigin.position);
+		effectMaterial.SetFloat("_ScanDistance", scanDistance);
+		RaycastCornerBlit(src, dst, effectMaterial);
 	}
 
-	void RaycastCornerBlit(RenderTexture source, RenderTexture dest, Material mat)
-	{
+	private void RaycastCornerBlit(RenderTexture source, RenderTexture dest, Material mat) {
 		// Compute Frustum Corners
 		float camFar = _camera.farClipPlane;
 		float camFov = _camera.fieldOfView;
