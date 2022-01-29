@@ -40,9 +40,10 @@ public class Baby : MonoBehaviour
     }
 
     public void Harm(int damage){
+        AudioManager.PlaySound(AudioManager.Sound.sfx_baby_damage, false, 0.7f);
         sprite.color = new Color(1, 0.2f, 0.2f, 1);
         health = health - damage;
-        Debug.Log("Bebena tiene: " + health);
+        Debug.Log("Bellenita tiene: " + health);
         Invoke("ResetColor", 0.1f);
         if (health <= 0){
             Die();

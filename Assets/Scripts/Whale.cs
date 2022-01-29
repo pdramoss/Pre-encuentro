@@ -13,13 +13,16 @@ public class Whale : MonoBehaviour
     public bool under_pressure = false;
 
     private Rigidbody2D rb;
-    private bool facing_right = true;
     private Vector2 move_direction;
     private SpriteRenderer sprite;
     private IEnumerator pressure_harm;
+    private bool facing_right = true;
+    private bool moving = false;
     
     void Start()
     {
+        //ESTE DEBERIA IR EN EL SCRIPT DEL NIVEL
+        AudioManager.PlaySound(AudioManager.Sound.mxIngame, true, 0.6f);
         sprite = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         startPosition = this.transform.position;
@@ -42,6 +45,23 @@ public class Whale : MonoBehaviour
 
         rb.velocity = new Vector2(move_direction.x * whale_speed, move_direction.y * whale_speed);
         transform.Translate(ocean_speed * Time.deltaTime, 0f, 0f, Space.World);
+
+        if (move_direction.x != 0 )
+        {
+            if (!moving){
+                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_head, false, 0.7f);
+                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_loop, true, 0.6f);
+                moving = true;
+            }
+        }
+        else
+        {
+            if (moving){
+                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_tail, false, 0.7f);
+                AudioManager.StopSound(AudioManager.Sound.sfx_whale_loop);
+                moving = false;
+            }    
+        }
 
         if (this.transform.position.y < 0)
         {
@@ -72,6 +92,7 @@ public class Whale : MonoBehaviour
     }
 
     public void Harm(int damage){
+        AudioManager.PlaySound(AudioManager.Sound.sfx_whale_damage, false, 1f);
         sprite.color = new Color(1, 0.2f, 0.2f, 1);
         health = health - damage;
         Debug.Log("Ballena tiene: " + health);
