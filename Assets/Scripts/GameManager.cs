@@ -9,7 +9,9 @@ public enum GameState{
 
 menu,
 inGame,
-gameOver
+gameOver,
+
+credits
 
 }
 
@@ -20,6 +22,10 @@ public class GameManager : MonoBehaviour
 
     public GameState currentGameState  = GameState.menu;
     private Whale controller;
+
+    public GameObject pauseMenuUI;
+
+    
     
     [SerializeField]  public bool isPaused = false;
 
@@ -35,20 +41,25 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        controller = GameObject.FindWithTag("Whale").GetComponent<Whale>();
-        StartGame();
+        controller = GameObject.FindWithTag("Player").GetComponent<Whale>();
+        BackToMenu();
     }
 
     void Update()
     {
         
-       if(Input.GetKeyDown(KeyCode.S)){
+       if(Input.GetKeyDown(KeyCode.S) && currentGameState != GameState.inGame){
            StartGame();
            isPaused=false;
        } 
-       if(Input.GetButton("Cancel")){
-           BackToMenu();
-           isPaused=true;
+       if(Input.GetButton("Cancel") && currentGameState == GameState.inGame){
+
+           if(isPaused){
+               Resume();
+           } else{
+               Pause();
+           }
+
        } 
         
     }
@@ -57,26 +68,72 @@ public class GameManager : MonoBehaviour
     public void StartGame(){ //Inicia el videojuego
         isPaused = false;
         SetGameState(GameState.inGame);
+        
+
     }
 
     public void GameOver(){ //Fin del juego por muerte
-      SetGameState(GameState.gameOver);   
+      SetGameState(GameState.gameOver);
+      
     
+    }
+
+    public void mainScene(){
+        SetGameState(GameState.menu);
+        
     }
 
     public void BackToMenu(){ // Volver al menú principal
       SetGameState(GameState.menu);
     }
 
+    public void creditMenu(){
+        SetGameState(GameState.credits);
+    }
+
     private void SetGameState (GameState newGameState){
         if(newGameState == GameState.menu){
-        } else if (newGameState == GameState.inGame){
-        } else if (newGameState == GameState.gameOver){
-        }
+            MenuManager.sharedInstanceMenu.ShowMainMenu();
+            MenuManager.sharedInstanceMenu.HideHud();
+            MenuManager.sharedInstanceMenu.Hidecredit();
+            MenuManager.sharedInstanceMenu.HideGameOver();
 
+        } else if (newGameState == GameState.inGame){
+            controller.StartGame();
+            MenuManager.sharedInstanceMenu.HideMainMenu();
+            MenuManager.sharedInstanceMenu.ShowHud();
+            MenuManager.sharedInstanceMenu.Hidecredit();
+            MenuManager.sharedInstanceMenu.HideGameOver();
+
+        } else if (newGameState == GameState.gameOver){
+            MenuManager.sharedInstanceMenu.HideMainMenu();
+            MenuManager.sharedInstanceMenu.HideHud();
+            MenuManager.sharedInstanceMenu.Hidecredit();
+            MenuManager.sharedInstanceMenu.ShowGameOver();
+
+        } else if (newGameState == GameState.credits){
+            MenuManager.sharedInstanceMenu.HideMainMenu();
+            MenuManager.sharedInstanceMenu.HideHud();
+            MenuManager.sharedInstanceMenu.ShowCredit();
+            MenuManager.sharedInstanceMenu.HideGameOver();
+        
+        }
         this.currentGameState = newGameState;
     }
 
-    
-    
+    public void Resume (){
+
+        pauseMenuUI.SetActive(false);
+        Time.timeScale =1;
+        isPaused= false;
+    }
+
+    void Pause (){
+        
+        pauseMenuUI.SetActive(true);
+        Time.timeScale =0;
+        isPaused= true;
+    }
+
+        
 }
