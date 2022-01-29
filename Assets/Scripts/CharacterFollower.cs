@@ -23,7 +23,6 @@ public class CharacterFollower : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
 
-        Debug.Log(target.position);
         if (target.position.x > transform.position.x && !facing_right)
             FlipCharacter();
         if (target.position.x < transform.position.x && facing_right)
