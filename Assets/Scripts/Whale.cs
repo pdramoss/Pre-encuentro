@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Whale : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class Whale : MonoBehaviour
 
     public void StartGame(){
         this.transform.position = startPosition;
+        healthPoints = Initial_Health;
+        animator.SetTrigger("Live");
     }
 
     void Update()
@@ -104,11 +107,11 @@ public class Whale : MonoBehaviour
 
     public void Harm(int damage){
         AudioManager.PlaySound(AudioManager.Sound.sfx_whale_damage, false, 1.2f);
-        sprite.color = new Color(1, 0.2f, 0.2f, 1);
+        sprite.color = new Color(255, 100, 100, 0);
         this.healthPoints -= damage;
         Debug.Log("Ballena tiene: " + healthPoints);
         Invoke("ResetColor", 0.1f);
-        if (healthPoints <= 30){
+        if (healthPoints <= 30 && healthPoints > 0){
             if (!low_health){
                 AudioManager.PlaySound(AudioManager.Sound.sfx_danger_loop, true, 1f);
                 low_health = true;
