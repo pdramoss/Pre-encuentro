@@ -12,6 +12,8 @@ public class MenuManager : MonoBehaviour
     public Canvas Credit;
 
     public Canvas GameOver;
+
+    public Canvas Winner;
       
     private void Awake (){
 
@@ -37,6 +39,10 @@ public class MenuManager : MonoBehaviour
         GameOver.enabled = true;
     }
 
+    public void ShowWinner(){
+        Winner.enabled = true;
+    }
+
     public void HideMainMenu (){
         menuCanvas.enabled = false;
     }
@@ -51,6 +57,10 @@ public class MenuManager : MonoBehaviour
 
     public void HideGameOver(){
         GameOver.enabled = false;
+    }
+
+    public void HideWinner(){
+        Winner.enabled = false;
     }
 
     public void ExitGame(){

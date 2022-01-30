@@ -105,7 +105,7 @@ public class Whale : MonoBehaviour
     public void Harm(int damage){
         AudioManager.PlaySound(AudioManager.Sound.sfx_whale_damage, false, 1.2f);
         sprite.color = new Color(1, 0.2f, 0.2f, 1);
-        healthPoints = healthPoints - damage;
+        this.healthPoints -= damage;
         Debug.Log("Ballena tiene: " + healthPoints);
         Invoke("ResetColor", 0.1f);
         if (healthPoints <= 30){
@@ -159,4 +159,14 @@ public class Whale : MonoBehaviour
     public float GetDistance (){
             return this.transform.position.x - startPosition.x;
     }
+
+    void OnTriggerEnter2D(Collider2D collision){
+        if(collision.tag == "Finish"){
+               Debug.Log("Terminó el nivel");
+            GameManager.sharedInstance.Winner();
+        }
+    }
+
+   
+    
 }

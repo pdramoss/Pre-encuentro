@@ -11,7 +11,9 @@ menu,
 inGame,
 gameOver,
 
-credits
+credits,
+
+winner
 
 }
 
@@ -84,6 +86,11 @@ public class GameManager : MonoBehaviour
     
     }
 
+    public void Winner(){
+        SetGameState(GameState.winner);
+        
+    }
+
     public void mainScene(){
         SetGameState(GameState.menu);
         
@@ -103,6 +110,8 @@ public class GameManager : MonoBehaviour
             MenuManager.sharedInstanceMenu.HideHud();
             MenuManager.sharedInstanceMenu.Hidecredit();
             MenuManager.sharedInstanceMenu.HideGameOver();
+            MenuManager.sharedInstanceMenu.HideWinner();
+            infinitePause();
 
         } else if (newGameState == GameState.inGame){
             controller.StartGame();
@@ -110,18 +119,32 @@ public class GameManager : MonoBehaviour
             MenuManager.sharedInstanceMenu.ShowHud();
             MenuManager.sharedInstanceMenu.Hidecredit();
             MenuManager.sharedInstanceMenu.HideGameOver();
+            MenuManager.sharedInstanceMenu.HideWinner();
+            infiniteResume();
 
         } else if (newGameState == GameState.gameOver){
             MenuManager.sharedInstanceMenu.HideMainMenu();
             MenuManager.sharedInstanceMenu.HideHud();
             MenuManager.sharedInstanceMenu.Hidecredit();
             MenuManager.sharedInstanceMenu.ShowGameOver();
+            MenuManager.sharedInstanceMenu.HideWinner();
+            infinitePause();
 
         } else if (newGameState == GameState.credits){
             MenuManager.sharedInstanceMenu.HideMainMenu();
             MenuManager.sharedInstanceMenu.HideHud();
             MenuManager.sharedInstanceMenu.ShowCredit();
             MenuManager.sharedInstanceMenu.HideGameOver();
+            MenuManager.sharedInstanceMenu.HideWinner();
+            infinitePause();
+        
+        } else if (newGameState == GameState.winner){
+            MenuManager.sharedInstanceMenu.HideMainMenu();
+            MenuManager.sharedInstanceMenu.HideHud();
+            MenuManager.sharedInstanceMenu.Hidecredit();
+            MenuManager.sharedInstanceMenu.HideGameOver();
+            MenuManager.sharedInstanceMenu.ShowWinner();
+            infinitePause();
         
         }
         this.currentGameState = newGameState;
@@ -139,6 +162,14 @@ public class GameManager : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale =0;
         isPaused= true;
+    }
+
+    void infinitePause(){
+        Time.timeScale =0;
+    }
+
+    void infiniteResume(){
+        Time.timeScale =1;
     }
 
         
