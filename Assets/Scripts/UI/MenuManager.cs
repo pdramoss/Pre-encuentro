@@ -63,6 +63,11 @@ public class MenuManager : MonoBehaviour
         #endif
     }
     
+    public void PlayClickSound(){
+        AudioManager.PlaySound(AudioManager.Sound.sfx_ui_click, false, 0.4f);
+    }
+
+
     void Start()
     {
         

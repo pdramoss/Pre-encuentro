@@ -5,20 +5,23 @@ using UnityEngine;
 public class Baby : MonoBehaviour
 {
     public int health = 100;
-    public SpriteRenderer sprite;
     public bool under_pressure = false;
 
+    private Animator animator;
+
+    private SpriteRenderer sprite;
     private IEnumerator pressure_harm;
     
     void Start()
     {
+        animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         pressure_harm = PressureHarm();
     }
     
     void Update()
     {
-        if (this.transform.position.y < 0)
+        if (this.transform.position.y < -1)
         {
             if (!under_pressure){
                 StartCoroutine(pressure_harm);
@@ -40,7 +43,7 @@ public class Baby : MonoBehaviour
     }
 
     public void Harm(int damage){
-        AudioManager.PlaySound(AudioManager.Sound.sfx_baby_damage, false, 0.7f);
+        AudioManager.PlaySound(AudioManager.Sound.sfx_baby_damage, false, 0.5f);
         sprite.color = new Color(1, 0.2f, 0.2f, 1);
         health = health - damage;
         Debug.Log("Bellenita tiene: " + health);
@@ -53,7 +56,9 @@ public class Baby : MonoBehaviour
     
 
     public void Die(){
+        animator.SetTrigger("Die");
         Debug.Log("Infanticidio");
+        GetComponent<CharacterFollower>().speed = 0;
         GameManager.sharedInstance.GameOver();
     }
 

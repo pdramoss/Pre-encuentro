@@ -7,13 +7,16 @@ public class Whale : MonoBehaviour
     
     public float ocean_speed = 0.5f;
     public float whale_speed = 2f;
-    public int health = 100; 
     public bool can_move = true;
     public Vector3 startPosition;
     public bool under_pressure = false;
+    public const int Initial_Health = 100, Max_Health = 200;
+    public const int Max_dist= 10;
 
     private Rigidbody2D rb;
     private Vector2 move_direction;
+
+    private Animator animator;
 
     private SpriteRenderer sprite;
     private IEnumerator pressure_harm;
@@ -21,25 +24,22 @@ public class Whale : MonoBehaviour
     private bool moving = false;
 
     private int healthPoints;
+    private bool low_health = false; 
 
-    public const int Initial_Health = 100, Max_Health = 200;
 
-    public const int Max_dist= 1000;
     
     void Start()
-    {
-        //ESTE DEBERIA IR EN EL SCRIPT DEL NIVEL
-        AudioManager.PlaySound(AudioManager.Sound.mxIngame, true, 0.6f);
+    {   
+        animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         startPosition = this.transform.position;
         pressure_harm = PressureHarm();
+        healthPoints = Initial_Health;
     }
 
     public void StartGame(){
         this.transform.position = startPosition;
-
-        healthPoints = Initial_Health;
     }
 
     void Update()
@@ -58,21 +58,23 @@ public class Whale : MonoBehaviour
         if (move_direction.x != 0 )
         {
             if (!moving){
-                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_head, false, 0.7f);
-                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_loop, true, 0.6f);
+                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_head, false, 0.2f);
+                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_loop, true, 0.8f);
+                animator.SetFloat("SwimSpeed", 1.4f);
                 moving = true;
             }
         }
         else
         {
             if (moving){
-                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_tail, false, 0.7f);
+                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_tail, false, 0.8f);
                 AudioManager.StopSound(AudioManager.Sound.sfx_whale_loop);
+                animator.SetFloat("SwimSpeed", 1f);
                 moving = false;
             }    
         }
 
-        if (this.transform.position.y < 0)
+        if (this.transform.position.y < -0.9f)
         {
             if (!under_pressure){
                 StartCoroutine(pressure_harm);
@@ -101,17 +103,28 @@ public class Whale : MonoBehaviour
     }
 
     public void Harm(int damage){
-        AudioManager.PlaySound(AudioManager.Sound.sfx_whale_damage, false, 1f);
+        AudioManager.PlaySound(AudioManager.Sound.sfx_whale_damage, false, 1.2f);
         sprite.color = new Color(1, 0.2f, 0.2f, 1);
-        health = health - damage;
-        Debug.Log("Ballena tiene: " + health);
+        healthPoints = healthPoints - damage;
+        Debug.Log("Ballena tiene: " + healthPoints);
         Invoke("ResetColor", 0.1f);
-        if (health <= 0){
+        if (healthPoints <= 30){
+            if (!low_health){
+                AudioManager.PlaySound(AudioManager.Sound.sfx_danger_loop, true, 1f);
+                low_health = true;
+            }
+        }
+        if (healthPoints <= 0){
             Die();
         }
     }
 
     public void Die(){
+        AudioManager.PlaySound(AudioManager.Sound.sfx_whale_die, false, 1f);
+        animator.SetTrigger("Die");
+        if (low_health){
+                AudioManager.StopSound(AudioManager.Sound.sfx_danger_loop);
+            }
         Debug.Log("Ballenicidio");
         GameManager.sharedInstance.GameOver();
     }
@@ -126,7 +139,14 @@ public class Whale : MonoBehaviour
     }
 
     public void CollectHealth(int points){
+        Debug.Log("Ballena tiene: " + healthPoints);
         this.healthPoints += points;
+        if (healthPoints > 30){
+            if (low_health){
+                AudioManager.StopSound(AudioManager.Sound.sfx_danger_loop);
+                low_health = false;
+            }
+        }
         if(this.healthPoints >= Max_Health){
             this.healthPoints = Max_Health;
         }

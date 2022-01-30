@@ -12,7 +12,15 @@ public static class AudioManager
         sfx_whale_damage,
         sfx_whale_head,
         sfx_whale_loop,
-        sfx_whale_tail
+        sfx_whale_tail,
+        sfx_whale_die,
+        sfx_whale_sonar,
+        sfx_baby_die,
+        sfx_ui_click,
+        sfx_pickup_food,
+        sfx_danger_loop,
+        amb_ocean,
+        mx_menu
     }
 
     private static List<GameObject> activeSounds = new List<GameObject>();

@@ -42,6 +42,7 @@ public class Collectable : MonoBehaviour
 
       switch(this.type){
           case CollectableType.food:
+          AudioManager.PlaySound(AudioManager.Sound.sfx_pickup_food, false, 0.5f);
           GameObject Whale = GameObject.Find("whale");
           Whale.GetComponent<Whale>().CollectHealth(this.value);
           break;
