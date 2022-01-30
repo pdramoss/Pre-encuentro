@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8787035329388173260}
   - component: {fileID: 1754538195221351658}
   - component: {fileID: -8635939135672923540}
+  - component: {fileID: -349671638867421628}
   m_Layer: 0
   m_Name: EnemyQuad
   m_TagString: Untagged
@@ -145,3 +146,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff587539d2e6a6e4cbc115b31c8792ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-349671638867421628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5760730019738039923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ba43980288f4c4bbfa18f509121f36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  can_harm: 0
+  damage: 20
