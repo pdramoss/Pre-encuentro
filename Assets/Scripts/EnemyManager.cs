@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class EnemyManager : MonoBehaviour {
     // Start is called before the first frame update
-    public Rigidbody enemy;
+    public Rigidbody2D enemy;
     private float timeRemaining = 10;
     public bool timeIsRunning = false;
     
@@ -27,7 +27,7 @@ public class EnemyManager : MonoBehaviour {
     }
 
     private void instantiateEnemy() {
-        Rigidbody clone = Instantiate(enemy, transform.position, transform.rotation);
+        Rigidbody2D clone = Instantiate(enemy, transform.position, transform.rotation);
         clone.velocity = transform.TransformDirection(Vector3.left * 30);
     }
 }

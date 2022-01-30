@@ -56,9 +56,9 @@ public class ScannerEffect : MonoBehaviour {
 	}
 
 	private void ActivateSonar(InputAction.CallbackContext context) {
+		_scannables = FindObjectsOfType<Scannable>();
 		_scanning = true;
 		scanDistance = 0;
-        //Debug.Log("SONAR" + context.ReadValueAsButton());
     }
 
 	[ImageEffectOpaque]

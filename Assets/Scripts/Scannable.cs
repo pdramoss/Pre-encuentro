@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class Scannable : MonoBehaviour {
-	private float timeEnable = 2;
-	private float timeDisable = 6;
-	private float timeRemaining = 0;
-	private float minimumAlpha = 0.0625f;
+	private float timeEnable = 0.5f;
+	private float timeDisable = 5.0f;
+	private float timeRemaining = 0.0f;
+	private float minimumAlpha = 0.65f;
     private bool isTimeRunning = false;
 	private bool isEnabledItem = false;
 
