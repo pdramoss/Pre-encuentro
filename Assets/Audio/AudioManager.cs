@@ -20,7 +20,9 @@ public static class AudioManager
         sfx_pickup_food,
         sfx_danger_loop,
         amb_ocean,
-        mx_menu
+        mx_menu,
+        sfx_pickup_waste,
+        sfx_ui_pause
     }
 
     private static List<GameObject> activeSounds = new List<GameObject>();

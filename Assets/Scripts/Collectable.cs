@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum CollectableType{
-    food
+    food,
+    trash
 }
 public class Collectable : MonoBehaviour
 {
@@ -39,12 +40,16 @@ public class Collectable : MonoBehaviour
     void Collect (){
            Hide();
            hasBeenCollected = true;
+           GameObject Whale = GameObject.Find("whale");
 
       switch(this.type){
           case CollectableType.food:
           AudioManager.PlaySound(AudioManager.Sound.sfx_pickup_food, false, 0.5f);
-          GameObject Whale = GameObject.Find("whale");
           Whale.GetComponent<Whale>().CollectHealth(this.value);
+          break;
+          case CollectableType.trash:
+          AudioManager.PlaySound(AudioManager.Sound.sfx_pickup_waste, false, 0.5f);
+          Whale.GetComponent<Whale>().Harm(this.value);
           break;
       }
         

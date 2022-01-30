@@ -139,7 +139,6 @@ public class Whale : MonoBehaviour
     }
 
     public void CollectHealth(int points){
-        Debug.Log("Ballena tiene: " + healthPoints);
         this.healthPoints += points;
         if (healthPoints > 30){
             if (low_health){
@@ -147,6 +146,7 @@ public class Whale : MonoBehaviour
                 low_health = false;
             }
         }
+        Debug.Log("Ballena tiene: " + healthPoints);
         if(this.healthPoints >= Max_Health){
             this.healthPoints = Max_Health;
         }
