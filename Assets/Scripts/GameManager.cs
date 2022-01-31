@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        AudioManager.PlaySound(AudioManager.Sound.mx_menu, true, 0.2f);
+        AudioManager.PlaySound(AudioManager.Sound.mx_menu, true, 0.4f);
         controller = GameObject.FindWithTag("Player").GetComponent<Whale>();
         BackToMenu();
     }
@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
                Resume();
            } else{
                Pause();
+               //AudioManager.PlaySound(AudioManager.Sound.sfx_ui_pause, false, 0.5f);
            }
 
        } 

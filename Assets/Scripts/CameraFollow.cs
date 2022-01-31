@@ -7,10 +7,19 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
 
     public float smooth = 0.125f; 
+    public Vector3 offset; 
 
 
-    void LateUpdate()
+    void FixedUpdate()
     {
-        transform.position = new Vector3(target.position.x, target.position.y, -10) ;
+        Vector3 desiredPosition = target.position + offset;
+        Vector3 smoothedPosition = Vector3.Lerp (transform.position, desiredPosition, smooth * Time.deltaTime);
+        if(smoothedPosition.y >= 0.08f){
+            smoothedPosition.y = 0.08f;
+        }
+        else if(smoothedPosition.y <= -0.08f){
+            smoothedPosition.y = -0.08f;
+        }
+        transform.position = smoothedPosition;
     }
 }

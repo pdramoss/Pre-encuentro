@@ -8,7 +8,7 @@ public class Whale : MonoBehaviour
     
     public float ocean_speed = 0.5f;
     public float whale_speed = 2f;
-    public bool can_move = true;
+    public bool can_move = false;
     public Vector3 startPosition;
     public bool under_pressure = false;
     public const int Initial_Health = 100, Max_Health = 200;
@@ -40,6 +40,7 @@ public class Whale : MonoBehaviour
     }
 
     public void StartGame(){
+        can_move = true;
         this.transform.position = startPosition;
         healthPoints = Initial_Health;
         animator.SetTrigger("Live");
@@ -55,8 +56,11 @@ public class Whale : MonoBehaviour
         if (move_direction.x < 0 && facing_right)
             FlipCharacter();
 
+        if (can_move)
+        {
         rb.velocity = new Vector2(move_direction.x * whale_speed, move_direction.y * whale_speed);
         transform.Translate(ocean_speed * Time.deltaTime, 0f, 0f, Space.World);
+        }
 
         if (move_direction.x != 0 )
         {
@@ -70,14 +74,16 @@ public class Whale : MonoBehaviour
         else
         {
             if (moving){
-                AudioManager.PlaySound(AudioManager.Sound.sfx_whale_tail, false, 0.8f);
-                AudioManager.StopSound(AudioManager.Sound.sfx_whale_loop);
+                if (can_move){
+                    AudioManager.PlaySound(AudioManager.Sound.sfx_whale_tail, false, 0.8f);
+                    AudioManager.StopSound(AudioManager.Sound.sfx_whale_loop);
+                }
                 animator.SetFloat("SwimSpeed", 1f);
                 moving = false;
             }    
         }
 
-        if (this.transform.position.y < -0.9f)
+        if (this.transform.position.y < -0.6f)
         {
             if (!under_pressure){
                 StartCoroutine(pressure_harm);
@@ -129,6 +135,7 @@ public class Whale : MonoBehaviour
                 AudioManager.StopSound(AudioManager.Sound.sfx_danger_loop);
             }
         Debug.Log("Ballenicidio");
+        can_move = false;
         GameManager.sharedInstance.GameOver();
     }
 
@@ -166,6 +173,7 @@ public class Whale : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision){
         if(collision.tag == "Finish"){
                Debug.Log("Terminó el nivel");
+               AudioManager.StopSound(AudioManager.Sound.sfx_whale_loop);
             GameManager.sharedInstance.Winner();
         }
     }

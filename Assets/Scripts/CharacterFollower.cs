@@ -21,7 +21,10 @@ public class CharacterFollower : MonoBehaviour
     
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+        if (character.GetComponent<Whale>().can_move)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+        }
 
         if (target.position.x > transform.position.x && !facing_right)
             FlipCharacter();

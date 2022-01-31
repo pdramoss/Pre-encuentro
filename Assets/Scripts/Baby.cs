@@ -21,7 +21,7 @@ public class Baby : MonoBehaviour
     
     void Update()
     {
-        if (this.transform.position.y < -1)
+        if (this.transform.position.y < -0.55f)
         {
             if (!under_pressure){
                 StartCoroutine(pressure_harm);
